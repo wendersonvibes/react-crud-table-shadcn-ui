@@ -1,19 +1,6 @@
 // SHADCN/UI COMPONENTS
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
+import { Table, TableBody, TableHead, TableHeader, TableRow, } from "@/components/ui/table"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, } from "@/components/ui/dropdown-menu"
 import { Button } from "./components/ui/button"
 
 // MY COMPONENTS 
@@ -22,25 +9,16 @@ import { Produto } from "./components/produto/Produto"
 import { Busca } from "./components/busca/Busca"
 
 // HOOKS
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 function App() {
+  const [busca, setBusca] = useState("")
   const [produtos, setProdutos] = useState([
     {
       id: 1,
       nome: 'Abacaxi'
-    },
-    {
-      id: 2,
-      nome: 'Pêra'
-    },
-    {
-      id: 3,
-      nome: 'Maçã'
-    },
+    }
   ])
-
-  const [busca, setBusca] = useState("")
 
   // ADICICIONAR PRODUTO
   const addProduto = (nome) => {
@@ -51,7 +29,6 @@ function App() {
         nome: nome
       }
     ];
-
     setProdutos(novosProdutos)
   }
 
@@ -61,27 +38,33 @@ function App() {
     let produtosFiltrados = todosProdutos.filter(
       (produto) => produto.id != id ? produto : null
     )
-
     setProdutos(produtosFiltrados)
   }
 
-  // BUSCAR PRODUTO
-  const buscarProduto = (produtos, busca) => {
-    
-    let buscados = produtos.filter((produto) =>
-      produto.nome.toLocaleLowerCase().includes(busca.toLocaleLowerCase())
-    )
-
-    // SUJEITO A ALTERAÇÕES!!!!
-    setProdutos(buscados)
-
+  // FUNÇÃO PARA RENDERIZAR OS PRODUTOS
+  function renderizarProdutos(produtos) {
+    return (
+      <TableBody>
+        {produtos.map(({ id, nome }) => (
+          <Produto key={id} id={id} nome={nome} deletarProduto={deletarProduto} />
+        ))}
+      </TableBody>
+    );
   }
 
-  // REALIZA A PESQUISA QUANDO O CAMPO BUSCA FOR PREENCHIDO
-  useEffect(() => {
-    buscarProduto(produtos, busca)
-  }, [busca])
+  // RENDERIZA SÓ OS PRODUTOS FILTRADOS PELA BUSCA
+  function renderizarProdutosFiltrados() {
+    const produtosFiltrados = produtos.filter((produto) =>
+      produto.nome.toLowerCase().includes(busca.toLowerCase())
+    );
 
+    return renderizarProdutos(produtosFiltrados);
+  }
+
+  // RENDERIZA TODOS OS PRODUTOS
+  function renderizarTodosOsProdutos() {
+    return renderizarProdutos(produtos);
+  }
 
   return (
     <div className="max-w-4xl py-6 mx-auto ">
@@ -93,6 +76,7 @@ function App() {
         {/* FORMULÁRIO DE PRODUTOS */}
         <ProdutoForm addProduto={addProduto} />
 
+        {/* DROPDOWN MENU */}
         <DropdownMenu>
           <DropdownMenuTrigger> <Button>Ordenar</Button> </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -113,11 +97,8 @@ function App() {
             </TableRow>
           </TableHeader>
 
-          <TableBody>
-            {produtos.map(({ id, nome }) => (
-              <Produto id={id} nome={nome} deletarProduto={deletarProduto} />
-            ))}
-          </TableBody>
+          {busca.length != 0 ? renderizarProdutosFiltrados() : renderizarTodosOsProdutos()}
+
         </Table>
       </div>
     </div>
