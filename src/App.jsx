@@ -26,13 +26,13 @@ function App() {
   ])
 
   // ADICICIONAR PRODUTO
-  const addProduto = (nome) => {
+  function addProduto(nome) {
     let novosProdutos = [...produtos, { id: Math.floor(Math.random() * 10000), nome: nome }];
     setProdutos(novosProdutos)
   }
 
   // DELETAR PRODUTO
-  const deletarProduto = (id) => {
+  function deletarProduto(id) {
     let todosProdutos = [...produtos]
     let produtosFiltrados = todosProdutos.filter(
       (produto) => produto.id != id ? produto : null
@@ -45,7 +45,7 @@ function App() {
     return (
       <TableBody>
         {produtos.map(({ id, nome }) => (
-          <Produto key={id} id={id} nome={nome} deletarProduto={deletarProduto} />
+          <Produto key={id} id={id} nome={nome} deletarProduto={deletarProduto} editProduto={editProduto} />
         ))}
       </TableBody>
     );

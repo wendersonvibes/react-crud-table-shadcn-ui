@@ -28,7 +28,7 @@ export function Produto({ id, nome, deletarProduto }) {
               <DropdownMenuTrigger> <DotsVerticalIcon /> </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <Button variant='outline'>Editar</Button>
+                  <Button variant='outline'> Editar</Button>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Button variant='destructive' onClick={() => deletarProduto(id)} >Deletar</Button>

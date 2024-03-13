@@ -15,6 +15,7 @@ import { PlusIcon } from "@radix-ui/react-icons"
 
 export function ProdutoForm({ addProduto }) {
 
+    const [modalAberto, setModalAberto] = useState(false)
     const [nome, setNome] = useState("");
 
     const handleSubmit = (e) => {
@@ -22,6 +23,7 @@ export function ProdutoForm({ addProduto }) {
         if (!nome ) return;
         addProduto(nome);
         setNome("");
+        setModalAberto(false);
     };
 
     const salvarNome = (e) => {
@@ -31,7 +33,7 @@ export function ProdutoForm({ addProduto }) {
 
     return (
         <div>
-            <Dialog>
+            <Dialog open={modalAberto} onOpenChange={() => setModalAberto(!modalAberto)} >
                 <DialogTrigger>
                     <Button>Novo produto <PlusIcon /></Button>
                 </DialogTrigger>
