@@ -45,7 +45,7 @@ function App() {
     return (
       <TableBody>
         {produtos.map(({ id, nome }) => (
-          <Produto key={id} id={id} nome={nome} deletarProduto={deletarProduto} editProduto={editProduto} />
+          <Produto key={id} id={id} nome={nome} deletarProduto={deletarProduto} />
         ))}
       </TableBody>
     );
