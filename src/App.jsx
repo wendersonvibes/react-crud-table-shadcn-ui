@@ -1,7 +1,6 @@
 // SHADCN/UI COMPONENTS
 import { Table, TableBody, TableHead, TableHeader, TableRow, } from "@/components/ui/table"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, } from "@/components/ui/dropdown-menu"
-import { Button } from "./components/ui/button"
+
 
 // MY COMPONENTS 
 import { ProdutoForm } from "./components/produtoForm/ProdutoForm"
@@ -10,25 +9,25 @@ import { Busca } from "./components/busca/Busca"
 
 // HOOKS
 import { useState } from "react"
+import { Filtro } from "./components/filtro/Filtro"
 
 function App() {
   const [busca, setBusca] = useState("")
+  const [ordem, setOrdem] = useState("Asc")
   const [produtos, setProdutos] = useState([
     {
       id: 1,
       nome: 'Abacaxi'
+    },
+    {
+      id: 2,
+      nome: 'Zebra'
     }
   ])
 
   // ADICICIONAR PRODUTO
   const addProduto = (nome) => {
-    let novosProdutos = [
-      ...produtos,
-      {
-        id: Math.floor(Math.random() * 10000),
-        nome: nome
-      }
-    ];
+    let novosProdutos = [...produtos, { id: Math.floor(Math.random() * 10000), nome: nome }];
     setProdutos(novosProdutos)
   }
 
@@ -52,18 +51,36 @@ function App() {
     );
   }
 
+  // FUNÇÃO PARA ORDENAR OS PRODUTOS
+  function ordenarProdutos(produtos) {
+    const ordenados = produtos.sort((a, b) =>
+      ordem === "Asc"
+      ? a.nome.localeCompare(b.nome) // organiza de forma ascendente
+      : b.nome.localeCompare(a.nome) // organiza de forma descendente
+    )
+
+    // RETORNA OS PRODUTOS ORDENADOS
+    return ordenados;
+  }
+
   // RENDERIZA SÓ OS PRODUTOS FILTRADOS PELA BUSCA
   function renderizarProdutosFiltrados() {
+    // filtra os produtos
     const produtosFiltrados = produtos.filter((produto) =>
       produto.nome.toLowerCase().includes(busca.toLowerCase())
     );
 
-    return renderizarProdutos(produtosFiltrados);
+    // ordena os produtos filtrados
+    let produtosOrdenados = ordenarProdutos(produtosFiltrados)
+
+    // retorna os produtos ordenados e filtrados
+    return renderizarProdutos(produtosOrdenados);
   }
 
   // RENDERIZA TODOS OS PRODUTOS
   function renderizarTodosOsProdutos() {
-    return renderizarProdutos(produtos);
+    let produtosOrdenados = ordenarProdutos(produtos)
+    return renderizarProdutos(produtosOrdenados);
   }
 
   return (
@@ -77,13 +94,8 @@ function App() {
         <ProdutoForm addProduto={addProduto} />
 
         {/* DROPDOWN MENU */}
-        <DropdownMenu>
-          <DropdownMenuTrigger> <Button>Ordenar</Button> </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>A-Z</DropdownMenuItem>
-            <DropdownMenuItem>Z-A</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Filtro setOrdem={setOrdem} />
+
       </div>
 
       {/* TABELA */}
